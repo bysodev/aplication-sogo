@@ -1,5 +1,9 @@
 import './globals.css'
 import { Inter } from 'next/font/google'
+import { Providers } from '@/redux/provider'
+import { ProviderAuth } from '@/components/auth/ProviderAuth'
+import ProviderQuery from '@/util/provider'
+// import ProviderQuery from ''
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -13,9 +17,19 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+
+  
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <Providers>
+          <ProviderAuth>
+            <ProviderQuery>
+              {children}
+            </ProviderQuery>
+          </ProviderAuth>
+        </Providers>
+      </body>
     </html>
   )
 }
