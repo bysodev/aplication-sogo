@@ -2,14 +2,15 @@
 
 import { GeneralCard } from "@/components/cards/GeneralCard"
 import Link from "next/link";
-import { useRouter } from "next/navigation"
+import { useRouter, usePathname } from 'next/navigation'
 
 const vocales = ['A', 'E', 'I', 'O', 'U'];
 const numeros = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
 export default function Learn(){
 
-    const router = useRouter()
+    const router = useRouter();
+
     
     return (
         <div className="grid place-content-center place-items-center mt-12">
@@ -18,7 +19,7 @@ export default function Learn(){
                     <div className="w-fit m-2 p-1 bg-white text-sky-600 text-center rounded-md  ">
                         <h5>VOCABULARIO</h5>
                     </div>
-                    <div className="text-white m-2 mt-6">
+       x             <div className="text-white m-2 mt-6">
                         <h6>Estas viendo las todas la vocales en lenguaje de señas!!</h6>
                     </div>
                 </div>

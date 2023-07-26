@@ -1,29 +1,82 @@
-'use client'
-
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useAppDispatch } from '@/redux/hooks';
-import { setCredential } from '@/redux/feautres/auth/authSlice';
-import getQueryClient from '@/util/getQueryClient';
 import { Tab } from '@headlessui/react';
+import Cookies from 'js-cookie'
+import { setCredential, setLoggin } from '@/redux/feautres/auth/authSlice';
 
-const getTokenUser = async () => {
-    const revalidatedData = await fetch(`https://api.chucknorris.io/jokes/random`, {
-        // next: { revalidate: 60 },
-        cache: 'no-store',
-        // headers: {
-        //   'Authorization': 'Bearer ' + token,
-        //   'Content-Type': 'application/json'
-        // }
+const myHeaders = {
+    Accept: 'application/json',
+    'Content-Type': 'application/x-www-form-urlencoded',
+  };
+
+var pruebaHeader = new Headers();
+pruebaHeader.append("Cookie", "touken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJCcnlhbiIsImV4cCI6MTY4OTM5Mjg4NX0.QuynHdDCqJKj2wUNWeYvUzVNwWGFHOa_n-Sh20GJUhk" );
+pruebaHeader.append("Accept", 'application/json');
+
+const pruebasCookies = async () => {
+    // return await axios.get('http://127.0.0.1:8000/user/prueba', {
+    //     withCredentials: true,
+    //     pruebaHeader: {
+    //         'Cookie': 'touken='+Cookies.get('touken')
+    //     }
+    // });
+    console.log(Cookies.get('touken'));
+    const respuesta = await fetch("http://127.0.0.1:8000/user/prueba", {
+        method: 'GET',
+        headers: pruebaHeader,
+        redirect: 'follow'
     })
+
+    if (respuesta.status === 200) {
+        return await respuesta.json();
+        // return await respuesta.json();
+    } else {
+        console.log(respuesta.status);
+        return false;
+    }
+
+}
+
+const  getTokenUser = async (name: string, password: string) => {
+
+    var myHeader = new Headers();
+    myHeader.append("Accept", "application/json");
+    myHeader.append("Content-Type", "application/x-www-form-urlencoded");
+
+    var urlencoded = new URLSearchParams();
+    urlencoded.append("username", name);
+    urlencoded.append("password", password);
+
+    // const respuesta = await axios.post("http://127.0.0.1:8000/user/token", urlencoded)
+
+    const respuesta = await fetch("http://127.0.0.1:8000/user/token", {
+        method: 'POST',
+        body: urlencoded,
+        headers: myHeaders,
+        credentials: 'include',
+        // credentials: 'same-origin',
+        redirect: 'follow'
+    })
+
+    if (respuesta.status === 200) {
+        return await respuesta.json();
+        // return await respuesta.json();
+    } else {
+        console.log(respuesta.status);
+        return false;
+    }
 }
 
 export default function Login() {
 
+    // const cookie = Cookies();
+
+
     const dispatch = useAppDispatch();
 
     const SignInSchema = Yup.object().shape({
-        email: Yup.string().trim().email('Invalid email').required('El correo es necesario'),
+        email: Yup.string().trim().required('El correo es necesario'),
         password: Yup.string().trim().required('Una contraseña es necesaria'),
         accesstoken: Yup.string()
     })
@@ -69,32 +122,48 @@ export default function Login() {
                                 accesstoken: ''
                             }}
                             validationSchema={SignInSchema}
-                            onSubmit={ (values) => {
-                                console.log('Hacemos un submit')
-                                dispatch(
-                                    setCredential({
-                                        email: values.email, 
-                                        password: values.password, 
-                                        accesstoken: values.accesstoken})
-                                )
+                            onSubmit={ async (values) => {
+                                const respuesta = await getTokenUser(values.email, values.password)
+                                // const respuesta = await pruebasCookies()
+                                console.log(respuesta)
+                                if( respuesta ){
+                                    Cookies.set('token', respuesta.access_token)
+                                    dispatch(
+                                        setLoggin({
+                                            email: values.email, 
+                                            password: values.password, 
+                                            accesstoken: respuesta.access_token,
+                                            logget: true
+                                        })
+                                    )
+                                }
                             } }>
                                 {(formikProps) => (
                                     <Form>
-                                       <input
-      className="peer h-full w-full rounded-[7px] border border-blue-gray-200 border-t-transparent bg-transparent px-3 py-2.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-pink-500 focus:border-t-transparent focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50"
-      placeholder=" "
-    />
-    <label className="before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none text-[11px] font-normal leading-tight text-blue-gray-400 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:border-blue-gray-200 before:transition-all after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:border-blue-gray-200 after:transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[3.75] peer-placeholder-shown:text-blue-gray-500 peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-pink-500 peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:border-pink-500 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:border-pink-500 peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
-      Input Pink
-    </label>
-                                        {formikProps.errors.email && formikProps.touched.email ? (
-                                            <ErrorMessage name="email" component="div" />
-                                        ) : null}
+                                        <div className="relative mb-3" data-te-input-wrapper-init>
 
-                                        <Field name="password" />
-                                        {formikProps.errors.password && formikProps.touched.password ? (
-                                            <ErrorMessage name="password" component="div" />
-                                        ) : null}
+                                            <Field name="email"
+                                                className="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:peer-focus:text-primary [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"/>
+
+                                            <label
+                                                className="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[0.9rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary">
+                                                Nombre
+                                            </label>
+                                            {formikProps.errors.email && formikProps.touched.email ? (
+                                                <ErrorMessage name="email" component="div" />
+                                            ) : null}
+                                        </div>
+                                        <div className="relative mb-3" data-te-input-wrapper-init>
+                                            <Field name="password"
+                                                className="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:peer-focus:text-primary [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"/>
+                                            <label
+                                                className="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[0.9rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary">
+                                                Passwrod
+                                            </label>
+                                            {formikProps.errors.password && formikProps.touched.password ? (
+                                                <ErrorMessage name="password" component="div" />
+                                            ) : null}
+                                        </div>
                                     
                                         <button type='submit'>Sign In</button>
                                     </Form>
