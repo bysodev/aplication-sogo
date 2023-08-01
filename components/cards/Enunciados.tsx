@@ -4,8 +4,6 @@ import Link from "next/link"
 
 export function Enunciados({title, contenido, url}: {title: string, contenido: string, url: string}) {
 
-
-
     return (
         <div className=" w-9/12 bg-sky-600 grid grid-flow-col rounded-lg bg-opacity-90">
             <div className="p-2">

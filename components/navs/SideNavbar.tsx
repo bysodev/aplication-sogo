@@ -1,5 +1,6 @@
 import { GiHamburgerMenu } from "react-icons/gi";
 import { Disclosure } from "@headlessui/react";
+import { usePathname } from 'next/navigation'
 import {
   MdOutlineSpaceDashboard,
   MdOutlineAnalytics,
@@ -11,8 +12,12 @@ import {
 import { CgProfile } from "react-icons/cg";
 import { FaRegComments } from "react-icons/fa";
 import { BiMessageSquareDots } from "react-icons/bi";
+import Link from "next/link";
 
 function SideNavbar() {
+  const pathname = usePathname()
+  console.log(pathname)
+
   return (
     <div className="flex">
       <Disclosure as="nav">
@@ -28,31 +33,46 @@ function SideNavbar() {
               Virtual Dashboard
             </h1>
             <div className=" my-4 border-b border-gray-100 pb-4">
-              <div className="flex  mb-2 justify-start items-center gap-4 pl-5 hover:bg-gray-900 p-2 rounded-md group cursor-pointer hover:shadow-lg m-auto">
-                <MdOutlineIntegrationInstructions className="text-2xl text-gray-600 group-hover:text-white " />
-                <h3 className="text-base text-gray-800 group-hover:text-white font-semibold ">
-                  Aprendizaje
-                </h3>
-              </div>
-              <div className="flex mb-2 justify-start items-center gap-4 pl-5 hover:bg-gray-900 p-2 rounded-md group cursor-pointer hover:shadow-lg m-auto">
-                <MdOutlineSpaceDashboard className="text-2xl text-gray-600 group-hover:text-white " />
-                <h3 className="text-base text-gray-800 group-hover:text-white font-semibold ">
-                  Dashboard
-                </h3>
-              </div>
-              <div className="flex  mb-2 justify-start items-center gap-4 pl-5 hover:bg-gray-900 p-2 rounded-md group cursor-pointer hover:shadow-lg m-auto">
-                <FaRegComments className="text-2xl text-gray-600 group-hover:text-white " />
-                <h3 className="text-base text-gray-800 group-hover:text-white font-semibold ">
-                  Comments
-                </h3>
-              </div>
-              <div className="flex  mb-2 justify-start items-center gap-4 pl-5 hover:bg-gray-900 p-2 rounded-md group cursor-pointer hover:shadow-lg m-auto">
-                <CgProfile className="text-2xl text-gray-600 group-hover:text-white " />
-                <h3 className="text-base text-gray-800 group-hover:text-white font-semibold ">
-                  Profile
-                </h3>
-              </div>
-             
+              <Link
+                href={'/learn'}
+              >
+                <div className={`flex mb-2 ${ pathname==='/learn' || pathname==='/learn/numeros' || pathname==='/learn/vocales' ? 'bg-gray-900 shadow-lg' : ''} justify-start items-center gap-4 pl-5 hover:bg-gray-900 p-2 rounded-md group cursor-pointer hover:shadow-lg m-auto`}>
+                  <MdOutlineIntegrationInstructions className={`text-2xl text-gray-600 group-hover:text-white ${ pathname==='/learn' || pathname==='/learn/numeros' || pathname==='/learn/vocales' ? 'text-white' : ''}`} />
+                  <h3 className={`text-base text-gray-800 group-hover:text-white font-semibold ${ pathname==='/learn' || pathname==='/learn/numeros' || pathname==='/learn/vocales' ? 'text-white' : ''} `}>
+                    Aprendizaje
+                  </h3>
+                </div>
+              </Link>
+              <Link
+                href={'/learn'}
+              >
+                <div className={`flex mb-2 ${ pathname==='/learn' || pathname==='/learn/numeros' || pathname==='/learn/vocales' ? 'bg-gray-900 shadow-lg' : ''} justify-start items-center gap-4 pl-5 hover:bg-gray-900 p-2 rounded-md group cursor-pointer hover:shadow-lg m-auto`}>
+                  <MdOutlineSpaceDashboard className={`text-2xl text-gray-600 group-hover:text-white ${ pathname==='/learn' || pathname==='/learn/numeros' || pathname==='/learn/vocales' ? 'text-white' : ''}`} />
+                  <h3 className={`text-base text-gray-800 group-hover:text-white font-semibold ${ pathname==='/learn' || pathname==='/learn/numeros' || pathname==='/learn/vocales' ? 'text-white' : ''} `}>
+                    Guias
+                  </h3>
+                </div>
+              </Link>
+              <Link
+                href={'/learn'}
+              >
+                <div className={`flex mb-2 ${ pathname==='/learn' || pathname==='/learn/numeros' || pathname==='/learn/vocales' ? 'bg-gray-900 shadow-lg' : ''} justify-start items-center gap-4 pl-5 hover:bg-gray-900 p-2 rounded-md group cursor-pointer hover:shadow-lg m-auto`}>
+                  <FaRegComments className={`text-2xl text-gray-600 group-hover:text-white ${ pathname==='/learn' || pathname==='/learn/numeros' || pathname==='/learn/vocales' ? 'text-white' : ''}`} />
+                  <h3 className={`text-base text-gray-800 group-hover:text-white font-semibold ${ pathname==='/learn' || pathname==='/learn/numeros' || pathname==='/learn/vocales' ? 'text-white' : ''} `}>
+                    Comments
+                  </h3>
+                </div>
+              </Link>
+              <Link
+                href={'/learn'}
+              >
+                <div className={`flex mb-2 ${ pathname==='/learn' || pathname==='/learn/numeros' || pathname==='/learn/vocales' ? 'bg-gray-900 shadow-lg' : ''} justify-start items-center gap-4 pl-5 hover:bg-gray-900 p-2 rounded-md group cursor-pointer hover:shadow-lg m-auto`}>
+                  <CgProfile className={`text-2xl text-gray-600 group-hover:text-white ${ pathname==='/learn' || pathname==='/learn/numeros' || pathname==='/learn/vocales' ? 'text-white' : ''}`} />
+                  <h3 className={`text-base text-gray-800 group-hover:text-white font-semibold ${ pathname==='/learn' || pathname==='/learn/numeros' || pathname==='/learn/vocales' ? 'text-white' : ''} `}>
+                    Profile
+                  </h3>
+                </div>
+              </Link>
             </div>
 
             {/* logout */}

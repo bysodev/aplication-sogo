@@ -1,4 +1,6 @@
 'use client'
+import { Enunciados } from "@/components/cards/Enunciados";
+import { GeneralCard } from "@/components/cards/GeneralCard"
 import Camara from '@/components/camara/Camara'
 import Image from "next/image";
 import A from '@/public/letra_A.jpg'
@@ -6,9 +8,12 @@ import { FooterLesson } from '@/components/progress/FooterLesson';
 import { useState } from "react";
 import { Progressbar } from '@/components/progress/Progressbar';
 
-export default function Lesson(){
+const vocales = ['A', 'E', 'I', 'O', 'U'];
+const numeros = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
-    const [progres, setprogress] = useState({preguntas: 12, porcentaje: 0, asiertos: 0, continue: false });
+export default function LessonNumeros(){
+
+    const [progres, setprogress] = useState({preguntas: 10, porcentaje: 0, asiertos: 0, tipo: 'numeros', continue: false });
 
     const cambio = () => {
         setprogress( pro => ({
@@ -43,8 +48,7 @@ export default function Lesson(){
                     {/* <Camara /> */}
                 </div>
             </div>
-            {/* <FooterLesson /> */}
+            <FooterLesson />
         </div>
-
     </>
 }
